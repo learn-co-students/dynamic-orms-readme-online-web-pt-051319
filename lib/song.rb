@@ -14,11 +14,12 @@ class Song
     sql = "pragma table_info('#{table_name}')"
 
     table_info = DB[:conn].execute(sql)
-    column_names = []
-    table_info.each do |row|
-      column_names << row["name"]
-    end
-    column_names.compact
+    # column_names = []
+    # table_info.each do |row|
+    #   column_names << row["name"]
+    # end
+    table_info.map{ |row| row["name"] }.compact
+    # column_names.compact
   end
 
   self.column_names.each do |col_name|
@@ -42,11 +43,12 @@ class Song
   end
 
   def values_for_insert
-    values = []
-    self.class.column_names.each do |col_name|
-      values << "'#{send(col_name)}'" unless send(col_name).nil?
-    end
-    values.join(", ")
+    # values = []
+    # self.class.column_names.each do |col_name|
+    #   values << "'#{send(col_name)}'" unless send(col_name).nil?
+    # end
+    # values.join(", ")
+    self.class.column_names.map{ |col_name| "'#{send(col_name)}'" unless send(col_name).nil? }.compact.join(", ")
   end
 
   def col_names_for_insert
